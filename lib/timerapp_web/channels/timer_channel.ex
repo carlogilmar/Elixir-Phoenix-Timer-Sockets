@@ -13,4 +13,9 @@ defmodule TimerappWeb.TimerChannel do
     {:noreply, socket}
   end
 
+	def handle_in("start_timer", _, socket) do
+		TimerappWeb.Endpoint.broadcast("timer:start", "start_timer", %{})
+		{:noreply, socket}
+	end
+
 end
