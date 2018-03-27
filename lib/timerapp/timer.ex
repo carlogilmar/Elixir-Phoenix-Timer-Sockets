@@ -11,35 +11,38 @@ defmodule Timerapp.Timer do
 
   def init(_state) do
     Logger.warn " 1 ============ Start Here! "
-    #broadcast(30, "Started Timer!!!!")
-    #schedule_timer(1_000)
-    #{:ok, 30}
 		TimerappWeb.Endpoint.subscribe "timer:start", []
-		{:ok, nil}
+    # Adding state
+    state = %{timer_ref: nil, timer: nil}
+    {:ok, state}
   end
 
-  def handle_info(:update, 0) do
-    broadcast 0, "TIMEEEEEEEEE"
-    {:noreply, 0}
+  def handle_info(:update, %{timer: 0}) do
+    broadcast 0, "Se acabo el tiempo!"
+    {:noreply, %{timer_ref: nil, timer: 0}}
   end
 
-  def handle_info(:update, time) do
+  def handle_info(:update, %{timer: time}) do
     leftover = time-1
-    broadcast leftover, "clock claock"
-    schedule_timer(1_000)
-    {:noreply, leftover}
+    timer_ref = schedule_timer 1_000
+    broadcast leftover, "Contando..."
+    {:noreply, %{timer_ref: timer_ref, timer: leftover}}
   end
 
-	def handle_info(%{event: "start_timer"}, _time) do
+	def handle_info(%{event: "start_timer"}, %{timer_ref: old_timer_ref}) do
+    cancel_timer(old_timer_ref)
 		duration = 30
-		schedule_timer 1_000
+		timer_ref = schedule_timer 1_000
 		broadcast duration, "Started Timer!!!"
-		{:noreply, duration}
+		{:noreply, %{timer_ref: timer_ref, timer: duration}}
 	end
 
   defp schedule_timer(interval) do
     Process.send_after self(), :update, interval
   end
+
+  defp cancel_timer(nil), do: :ok
+  defp cancel_timer(ref), do: Process.cancel_timer(ref)
 
   defp broadcast(time, response) do
     TimerappWeb.Endpoint.broadcast! "timer:update", "new_time", %{ response: response, time: time}
