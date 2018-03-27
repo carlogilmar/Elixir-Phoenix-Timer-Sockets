@@ -10,6 +10,9 @@ defmodule Timerapp.Application do
     children = [
       # Start the endpoint when the application starts
       supervisor(TimerappWeb.Endpoint, []),
+
+			worker(Timerapp.Timer, []),
+
       # Start your own worker by calling: Timerapp.Worker.start_link(arg1, arg2, arg3)
       # worker(Timerapp.Worker, [arg1, arg2, arg3]),
     ]
