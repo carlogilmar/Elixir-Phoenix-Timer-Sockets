@@ -22,10 +22,10 @@ defmodule Timerapp.Timer do
   end
 
   def handle_info(:update, time) do
-    leftover = time -1
+    leftover = time-1
     broadcast leftover, "clock claock"
     schedule_timer(1_000)
-    {:no_reply, leftover}
+    {:noreply, leftover}
   end
 
   defp schedule_timer(interval) do
@@ -33,7 +33,7 @@ defmodule Timerapp.Timer do
   end
 
   defp broadcast(time, response) do
-    TimerappWeb.Endpoint.broadcast! "timer:update", "new_time", %{ response:response, time:time,}
+    TimerappWeb.Endpoint.broadcast! "timer:update", "new_time", %{ response: response, time: time}
   end
 
 
