@@ -61,6 +61,8 @@ channel.join()
 
 channel.on("new_time", msg => {
   console.log("The timer is ", msg.time)
+    document.getElementById('status').innerHTML = msg.response
+    document.getElementById('timer').innerHTML = msg.time
 })
 
 export default socket
