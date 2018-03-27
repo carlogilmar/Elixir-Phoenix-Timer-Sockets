@@ -8,4 +8,9 @@ defmodule TimerappWeb.TimerChannel do
     {:ok, socket}
   end
 
+  def handle_in("new_time", msg, socket) do
+    push socket, "new_time", msg
+    {:noreply, socket}
+  end
+
 end
