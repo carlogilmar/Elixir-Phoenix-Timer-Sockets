@@ -11,9 +11,11 @@ defmodule Timerapp.Timer do
 
   def init(_state) do
     Logger.warn " 1 ============ Start Here! "
-    broadcast(30, "Started Timer!!!!")
-    schedule_timer(1_000)
-    {:ok, 30}
+    #broadcast(30, "Started Timer!!!!")
+    #schedule_timer(1_000)
+    #{:ok, 30}
+		TimerappWeb.Endpoint.subscribe "timer:start", []
+		{:ok, nil}
   end
 
   def handle_info(:update, 0) do
@@ -27,6 +29,13 @@ defmodule Timerapp.Timer do
     schedule_timer(1_000)
     {:noreply, leftover}
   end
+
+	def handle_info(%{event: "start_timer"}, _time) do
+		duration = 30
+		schedule_timer 1_000
+		broadcast duration, "Started Timer!!!"
+		{:noreply, duration}
+	end
 
   defp schedule_timer(interval) do
     Process.send_after self(), :update, interval
