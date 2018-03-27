@@ -72,4 +72,6 @@ let startTimer = fucntion(event){
 				 .receive('ok', resp => { console.log("Starter timer",resp) })
 }
 
+document.getElementById('start-timer').onclick = startTimer
+
 export default socket
