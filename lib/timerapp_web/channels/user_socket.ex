@@ -2,7 +2,9 @@ defmodule TimerappWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", TimerappWeb.RoomChannel
+  #
+  # Note: route all the incoming messages to the corresponding channel in the socket module.
+   channel "timer:*", TimerappWeb.TimerChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
